@@ -6,8 +6,42 @@ import { CustomResponse } from '../../middlewares/interfaces/customResponse';
 const router = Router();
 const helper = require("./helper");
 
-console.log("Inicializa users routes");
+console.log("Inicializa entities routes");
 
+// Obtener todos los registros (GET /entities)
+router.get('/entities',
+  async (req: Request, res: Response) => {
+    let status: number = 200;
+    let customResponse: CustomResponse = {
+      meta: {
+        method: 'get',
+        operation: '/entities'
+      },
+      data: null,
+    };
+
+    try {
+      console.log("get in entities route");
+
+      console.log(req.body);
+      helper.obtenerEntidades(req.body)
+        .then((data: any) => {
+          customResponse.data = data;
+          res.status(status).send(customResponse);
+        })
+        .catch((err: any) => {
+          console.error("catch in entities route");
+          customResponse.error = err;
+          status = 401;
+          res.status(status).send(customResponse);
+        });
+    } catch (error: any) {
+      customResponse.error = error;
+      status = 500;
+      res.status(status).send(customResponse);
+    }
+  });
+  
 // Agregar un registro (POST /users)
 /*
 router.post('/', async (req: Request, res: Response) => {
@@ -51,38 +85,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 */
-// Opcional: Obtener todos los registros (GET /users)
-router.get('/login',
-  async (req: Request, res: Response) => {
-    let status: number = 200;
-    let customResponse: CustomResponse = {
-      meta: {
-        method: 'get',
-        operation: '/login'
-      },
-      data: null,
-    };
 
-    try {
-      console.log("get in login route");
 
-      console.log(req.body);
-      helper.ingreso(req.body)
-        .then((data: any) => {
-          customResponse.data = data;
-          res.status(status).send(customResponse);
-        })
-        .catch((err: any) => {
-          console.error("catch in login route");
-          customResponse.error = err;
-          status = 401;
-          res.status(status).send(customResponse);
-        });
-    } catch (error: any) {
-      customResponse.error = error;
-      status = 500;
-      res.status(status).send(customResponse);
-    }
-  });
 
 export default router;

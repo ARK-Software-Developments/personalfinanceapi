@@ -1,5 +1,8 @@
 import express from 'express';
 import usersRoutes from './src/modules/users/routes';
+import entitiesRoutes from './src/modules/entities/routes';
+import fs from 'fs';
+import path from 'path';
 
 require('dotenv').config();
 
@@ -22,13 +25,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(function (req, res, next) {
-    const origin = req.headers.origin || '';
-    /*  if (environment === developmentMode) {
-        res.header('Access-Control-Allow-Origin', '*');
-      } else if (corsUrlsFrontend === origin) {
-       // res.header('Access-Control-Allow-Origin', origin);
-        res.header('Access-Control-Allow-Origin', origin);
-      }*/
     res.header('Access-Control-Allow-Origin', '*');
     res.header(
         'Access-Control-Allow-Headers',
@@ -41,7 +37,17 @@ app.use(function (req, res, next) {
 app.use(express.json());
 
 app.use('/api', usersRoutes);
+app.use('/api', entitiesRoutes);
 
-app.listen(process.env.REACT_APP_PORT, () => {
-  console.log(`Servidor corriendo en ${process.env.REACT_APP_PUBLIC_URL}:${process.env.REACT_APP_PORT}`);
+// Opciones para HTTPS
+/*
+const options = {
+  key: fs.readFileSync(path.join(__dirname, 'path/to/your/private.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'path/to/your/certificate.crt'))
+};
+*/
+
+// Inicia el servidor HTTPS
+http.createServer(app).listen(process.env.REACT_APP_PORT, () => {
+  console.log(`Servidor HTTPS escuchando en ${process.env.REACT_APP_PUBLIC_URL}:${process.env.REACT_APP_PORT}`);
 });
