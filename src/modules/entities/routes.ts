@@ -21,8 +21,7 @@ router.get('/entities',
     };
 
     try {
-      console.log("get in entities route");
-
+      console.error(new Date(Date.now()).toISOString() + '[get] in entities route!');
       console.log(req.body);
       helper.obtenerEntidades(req.body)
         .then((data: any) => {

@@ -34,8 +34,13 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use(express.json());
+// Sirve los archivos estáticos desde la carpeta 'build'
+app.use(express.static(path.join(__dirname, 'build')));
 
+app.use(express.json());
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 app.use('/api', usersRoutes);
 app.use('/api', entitiesRoutes);
 
